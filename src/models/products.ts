@@ -32,7 +32,7 @@ export default () => {
     const addToCart = (payload: any) => {
         try {
             add_to_cart(payload).then((res) => {
-                if (res.status === 200) message.success('Thêm vào giỏ hàng thành công');
+                if (res.status === 201) message.success('Thêm vào giỏ hàng thành công');
             });
         } catch (error) {
             console.log(error);

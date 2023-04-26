@@ -7,7 +7,7 @@ const onSearch = (value: string) => history.push('/wishlist');
 
 const App: React.FC = () => (
   <div style={{ display: 'flex', cursor: 'pointer' }} onClick={onSearch}>
-    <Badge count={5}>
+    <Badge count={0}>
       <HeartOutlined style={{ fontSize: 24 }} />
     </Badge>
   </div>

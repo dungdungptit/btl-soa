@@ -58,7 +58,7 @@ const Header = () => {
             gap: 16,
           }}
         >
-          <MenuItem title={'Trang chủ'} path={'/home'} name={'Trang chủ'} />
+          {/* <MenuItem title={'Trang chủ'} path={'/home'} name={'Trang chủ'} /> */}
           <MenuItem title={'Sản phẩm'} path={'/products'} name={'Sản phẩm'} />
           <MenuItem title={'Giới thiệu'} path={'/about'} name={'Giới thiệu'} />
           <MenuItem title={'Liên hệ'} path={'/contact'} name={'Liên hệ'} />

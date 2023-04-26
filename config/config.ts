@@ -76,6 +76,11 @@ export default defineConfig({
       component: './Cart',
     },
     {
+      name: 'Thanh toán',
+      path: '/checkout',
+      component: './Payment',
+    },
+    {
       name: 'Wishlist',
       path: '/wishlist',
       component: './Wishlist',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useModel } from '@umijs/max';
+import { useModel, history } from '@umijs/max';
 import styles from './index.less';
 import { user_info } from '@/services/user/user';
 import { Breadcrumb, Button, InputNumber, Table } from 'antd';
@@ -253,11 +253,11 @@ const HomePage: React.FC = () => {
               if (token) {
                 const asyncFunc = async () => {
                   const userId = await user_info();
-                  console.log(userId.data?.id, 'userId');
-                  const condition = {
+                  history.push('/checkout', {
                     user_id: userId.data?.id,
-                  };
-                  cart.getData({ ...condition });
+                    total,
+                    selectedRows,
+                  });
                 };
                 asyncFunc();
               }
