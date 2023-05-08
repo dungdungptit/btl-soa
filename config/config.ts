@@ -2,7 +2,9 @@ import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 
 export default defineConfig({
-  antd: {},
+  antd: {
+
+  },
   access: {},
   model: {},
   initialState: {},
@@ -79,6 +81,11 @@ export default defineConfig({
       name: 'Thanh toán',
       path: '/checkout',
       component: './Payment',
+    },
+    {
+      name: 'Đơn hàng',
+      path: '/orders',
+      component: './Order',
     },
     {
       name: 'Wishlist',

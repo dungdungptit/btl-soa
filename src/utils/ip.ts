@@ -1,4 +1,4 @@
 // const ip = 'http://localhost'; // ip dev
-const ip = 'http://192.168.1.13'; // ip dev
+const ip = 'http://localhost'; // ip dev
 
 export { ip };

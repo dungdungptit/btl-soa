@@ -4,8 +4,10 @@ import { useModel } from 'umi';
 import { useEffect, useState } from 'react';
 import { ip } from '../../../utils/ip';
 import { user_info } from '@/services/user/user';
+
 const ProductItem = () => {
   const productsModel = useModel('products');
+  const cart = useModel('cart');
   const pathname = window.location.pathname;
   const id = pathname.split('/').pop();
   const [quantity, setQuantity] = useState(1);
@@ -38,6 +40,10 @@ const ProductItem = () => {
       };
       console.log(data);
       productsModel.addToCart(data);
+      const condition = {
+        user_id: userId.data?.id,
+      };
+      cart.getData({ ...condition });
     }
   };
 

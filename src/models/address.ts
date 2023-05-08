@@ -2,22 +2,24 @@
 import { DEFAULT_NAME } from '@/constants';
 import { useState } from 'react';
 import { message } from 'antd';
-import { get_orders, post_order } from '../services/orders/orders';
+import { get_address, create_address, update_address, delete_address } from '../services/address';
 
 export default () => {
     const [name, setName] = useState<string>(DEFAULT_NAME);
     const [danhSach, setDanhSach] = useState<any[]>([]);
     const [record, setRecord] = useState<any>({});
+    const [recordSelected, setRecordSelected] = useState<any>(null);
 
     const getData = (payload: any) => {
         try {
-            get_orders(payload).then((res) => {
+            get_address(payload).then((res) => {
                 setDanhSach(res.data?.data);
             });
         } catch (error) {
             console.log(error);
         }
     };
+
 
     return {
         name,
@@ -26,6 +28,8 @@ export default () => {
         setDanhSach,
         record,
         setRecord,
+        recordSelected,
+        setRecordSelected,
 
         getData,
     };

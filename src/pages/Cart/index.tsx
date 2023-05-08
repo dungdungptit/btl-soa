@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useModel, history } from '@umijs/max';
+import { useModel, history } from 'umi';
 import styles from './index.less';
 import { user_info } from '@/services/user/user';
 import { Breadcrumb, Button, InputNumber, Table } from 'antd';
@@ -252,14 +252,17 @@ const HomePage: React.FC = () => {
               const token = localStorage.getItem('token');
               if (token) {
                 const asyncFunc = async () => {
-                  const userId = await user_info();
-                  history.push('/checkout', {
-                    user_id: userId.data?.id,
+                  return await user_info();
+                };
+                asyncFunc().then((res) => {
+                  const state = {
+                    user_id: res.data?.id,
                     total,
                     selectedRows,
-                  });
-                };
-                asyncFunc();
+                  };
+                  cart.setRecord(state);
+                  history.push('/checkout', state);
+                });
               }
             }}
           >

@@ -7,6 +7,7 @@ import { getCarts, update_cartitem, delete_cartitem } from '../services/cart/car
 export default () => {
     const [name, setName] = useState<string>(DEFAULT_NAME);
     const [danhSach, setDanhSach] = useState<any[]>([]);
+    const [record, setRecord] = useState<any>({});
 
     const getData = (payload: any) => {
         try {
@@ -65,6 +66,8 @@ export default () => {
         setName,
         danhSach,
         setDanhSach,
+        record,
+        setRecord,
 
         getData,
         updateCartItem,
