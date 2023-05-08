@@ -5,6 +5,10 @@ export const getProducts = (payload: any) => {
     return axios.get(`${ip}:9999/products`, { params: payload });
 };
 
+export const get_categories = (payload: any) => {
+    return axios.get(`${ip}:9116/categories`, { params: payload });
+};
+
 export const getProduct = (id: any) => {
     return axios.get(`${ip}:9999/products/${id}`);
 };

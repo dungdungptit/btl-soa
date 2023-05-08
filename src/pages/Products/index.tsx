@@ -1,4 +1,4 @@
-import { Breadcrumb, Button } from 'antd';
+import { Breadcrumb, Button, Card, Slider, Pagination, Select } from 'antd';
 import styles from './index.less';
 import { useModel } from 'umi';
 import { useEffect } from 'react';
@@ -7,39 +7,9 @@ import { ip } from '@/utils/ip';
 const HomePage: React.FC = () => {
   const productsModel = useModel('products');
 
-  const p = {
-    id: 1,
-    title:
-      'T_SHIRT Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente, quam! Ullam similique, sunt atque ex modi dolor enim corporis eum voluptate fugiat id facere eveniet deleniti, ad quidem facilis nobis',
-    quantity: 123,
-    price: 12.34,
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt voluptas laboriosam, est ad aliquid perferendis ea voluptates veritatis, magni ab voluptatum repudiandae nemo dignissimos dolor hic corporis at accusamus totam?\nVoluptas totam eveniet enim reiciendis quam iusto quidem? Facilis recusandae exercitationem deserunt velit deleniti repellat consequatur architecto repellendus, eum inventore, ipsa harum odit, sequi aut? Eaque cum suscipit quaerat amet?\nExcepturi eos suscipit beatae velit eveniet aspernatur, quam reprehenderit veritatis. At harum numquam doloremque, minus sed voluptas porro illo sequi facilis. At sint officiis deserunt minus ratione saepe placeat inventore.',
-    status: 'on',
-    created: '2022-03-13T13:55:05.058000+07:00',
-    updated: '2022-03-13T13:55:05.058000+07:00',
-    categories: [
-      {
-        id: 1,
-        name: 't-shirt',
-        code: 't-shirt',
-        description:
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt voluptas laboriosam, est ad aliquid perferendis ea voluptates veritatis, magni ab voluptatum repudiandae nemo dignissimos dolor hic corporis at accusamus totam?\nVoluptas totam eveniet enim reiciendis quam iusto quidem? Facilis recusandae exercitationem deserunt velit deleniti repellat consequatur architecto repellendus, eum inventore, ipsa harum odit, sequi aut? Eaque cum suscipit quaerat amet?\nExcepturi eos suscipit beatae velit eveniet aspernatur, quam reprehenderit veritatis. At harum numquam doloremque, minus sed voluptas porro illo sequi facilis. At sint officiis deserunt minus ratione saepe placeat inventore.',
-        created: '2022-03-13T13:55:10.265000+07:00',
-        updated: '2022-03-13T13:55:10.265000+07:00',
-      },
-    ],
-    images: [
-      {
-        id: 1,
-        image: 'http://product-service:9000/media/images/7352.jpg',
-        product: 1,
-      },
-    ],
-  };
-
   useEffect(() => {
     productsModel.getData({});
+    productsModel.getCategories({});
   }, []);
 
   return (
@@ -51,41 +21,124 @@ const HomePage: React.FC = () => {
       <div className={styles.content}>
         <div className={styles.filter}>
           <div className={styles.filterItem}>
-            <span className={styles.filterItemLabel}>Danh mục</span>
-            <select className={styles.filterItemSelect}>
-              <option value="all">Tất cả</option>
-              <option value="t-shirt">Áo thun</option>
-              <option value="t-shirt">Áo sơ mi</option>
-              <option value="t-shirt">Áo khoác</option>
-            </select>
+            <Card title="Danh mục">
+              <div className={styles.filterItemCategory}>
+                <div className={styles.filterItemCategoryItem}>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      productsModel.setCondition({});
+                      productsModel.getData({});
+                    }}
+                    className={styles.filterItemCategoryItemButton}
+                  >
+                    Tất cả
+                  </Button>
+                </div>
+                {productsModel.categories.map((category, index) => (
+                  <div
+                    className={styles.filterItemCategoryItem}
+                    key={index + 1}
+                  >
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        productsModel.setCondition({
+                          ...productsModel.condition,
+                          categories: category.id,
+                        });
+                        productsModel.getData({
+                          ...productsModel.condition,
+                          categories: category.id,
+                        });
+                      }}
+                      className={styles.filterItemCategoryItemButton}
+                    >
+                      {category.name}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </Card>
           </div>
           <div className={styles.filterItem}>
-            <span className={styles.filterItemLabel}>Trạng thái</span>
-            <select className={styles.filterItemSelect}>
-              <option value="all">Tất cả</option>
-              <option value="on">Đang bán</option>
-              <option value="off">Ngừng bán</option>
-            </select>
+            <Card title="Giá">
+              <div className={styles.filterItemPrice}>
+                <div className={styles.filterItemPriceItem}>
+                  <Slider
+                    range
+                    min={0}
+                    max={100}
+                    marks={{
+                      0: '0₫',
+                      100: '100.000₫',
+                    }}
+                    defaultValue={[0, 100]}
+                    onChange={(value) => {
+                      productsModel.setCondition({
+                        ...productsModel.condition,
+                        priceStart: value[0],
+                        priceEnd: value[1],
+                      });
+                      productsModel.getData({
+                        ...productsModel.condition,
+                        priceStart: value[0],
+                        priceEnd: value[1],
+                      });
+                    }}
+                  />
+                </div>
+                <div className={styles.filterItemPriceItem}>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      productsModel.setCondition({
+                        ...productsModel.condition,
+                        priceStart: 0,
+                        priceEnd: 100,
+                      });
+                      productsModel.getData({});
+                    }}
+                    className={styles.filterItemPriceItemButton}
+                  >
+                    Xóa
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
 
         <div className={styles.products}>
           <div className={styles.shortBar}>
-            <div className={styles.shortBarItem}>
+            <div className={styles.shortBarItem1}>
               <span className={styles.shortBarItemLabel}>Sắp xếp</span>
-              <select className={styles.shortBarItemSelect}>
-                <option value="all">Mặc định</option>
-                <option value="on">Giá tăng dần</option>
-                <option value="off">Giá giảm dần</option>
-              </select>
-            </div>
-            <div className={styles.shortBarItem}>
-              <span className={styles.shortBarItemLabel}>Hiển thị</span>
-              <select className={styles.shortBarItemSelect}>
-                <option value="all">20</option>
-                <option value="on">40</option>
-                <option value="off">60</option>
-              </select>
+              <Select
+                defaultValue="all"
+                className={styles.shortBarItemSelect}
+                options={[
+                  { value: 'all', label: 'Mặc định' },
+                  { value: 'on', label: 'Giá tăng dần' },
+                  { value: 'off', label: 'Giá giảm dần' },
+                ]}
+                onChange={(value) => {
+                  if (value === 'on') {
+                    productsModel.setDanhSach([
+                      ...productsModel.danhSach.sort(
+                        (a, b) => a.price - b.price,
+                      ),
+                    ]);
+                  } else if (value === 'off') {
+                    productsModel.setDanhSach([
+                      ...productsModel.danhSach.sort(
+                        (a, b) => b.price - a.price,
+                      ),
+                    ]);
+                  } else {
+                    productsModel.getData({});
+                  }
+                }}
+              />
             </div>
           </div>
 
@@ -112,7 +165,11 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className={styles.productItemInfoPrice}>
                     <span className={styles.productItemInfoPriceLabel}>
-                      {product.price} ₫
+                      {product.price.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}{' '}
+                      ₫
                     </span>
                   </div>
                   <div className={styles.productItemInfoAction}>
@@ -127,6 +184,23 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className={styles.shortBarItem}>
+            <Pagination
+              defaultCurrent={productsModel.condition.page || 1}
+              total={productsModel.total}
+              onChange={(page) => {
+                productsModel.setPage(page);
+                productsModel.setCondition({
+                  ...productsModel.condition,
+                });
+                productsModel.getData({
+                  ...productsModel.condition,
+                  page: page,
+                });
+              }}
+            />
           </div>
         </div>
       </div>

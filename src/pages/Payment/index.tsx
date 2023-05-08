@@ -140,13 +140,13 @@ const HomePage: React.FC = () => {
   };
 
   const handleOrder = async () => {
-    let cost = cart.record?.total;
+    let cost = 0;
     if (valueShipmentMethod === 'normal') {
-      cost += 10;
+      cost = 10;
     } else if (valueShipmentMethod === 'fast') {
-      cost += 20;
+      cost = 20;
     } else {
-      cost += 30;
+      cost = 30;
     }
     if (valuePaymentMethod === 'card') {
       const data = {

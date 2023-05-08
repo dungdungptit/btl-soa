@@ -37,6 +37,18 @@ const App: React.FC = () => {
       label: (
         <span
           onClick={() => {
+            history.push('/orders');
+          }}
+        >
+          Đơn hàng
+        </span>
+      ),
+    },
+    {
+      key: '3',
+      label: (
+        <span
+          onClick={() => {
             userModel.logoutModel({});
             setInitialState({ ...initialState, currentUser: undefined });
             history.push('/user/login');
