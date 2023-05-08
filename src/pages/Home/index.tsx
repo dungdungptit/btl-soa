@@ -16,15 +16,15 @@ const HomePage: React.FC = () => {
           {`
           1, [OK] đăng ký 
           2, [OK] đăng nhập 
-          3, trang chủ
-          4, trang sản phẩm
-          5, trang chi tiết, có comment
-          6, yêu thích
-          7, giỏ hàng
-          8, form(thêm địa chỉ giao hàng)
-          9, form(thanh toán)
-          10, trang thanh toán
-          11, trang đơn hàng
+          3, [OK] trang chủ
+          4, [OK] trang sản phẩm
+          5, [OK] trang chi tiết, có comment
+          6, [OK] yêu thích
+          7, [OK] giỏ hàng
+          8, [OK] form(thêm địa chỉ giao hàng)
+          9, [OK] form(thanh toán)
+          10,[OK] trang thanh toán
+          11,[OK] trang đơn hàng
           `}
         </pre>
       </div>
