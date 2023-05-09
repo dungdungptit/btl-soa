@@ -43,6 +43,10 @@ const Login: React.FC = () => {
             systemRole: systemRole,
           },
         });
+        if (systemRole === 'Admin') {
+          history.push('/admin_service');
+          return;
+        }
         history.push('/home');
         return;
       }

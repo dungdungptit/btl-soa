@@ -22,6 +22,9 @@ const loading = (
 const App: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const userModel = useModel('user');
+  const access = useAccess();
+
+  console.log('access', access);
 
   const items: MenuProps['items'] = [
     {
@@ -66,6 +69,49 @@ const App: React.FC = () => {
   const { currentUser } = initialState;
   if (!currentUser) {
     return loading;
+  }
+
+  if (access.admin === true) {
+    // clear items
+    items.splice(0, items.length);
+    items.push({
+      key: '1',
+      label: (
+        <span
+          onClick={() => {
+            history.push('/admin_service');
+          }}
+        >
+          Service Discovery
+        </span>
+      ),
+    });
+    items.push({
+      key: '2',
+      label: (
+        <span
+          onClick={() => {
+            history.push('/admin_user');
+          }}
+        >
+          Quản lý người dùng
+        </span>
+      ),
+    });
+    items.push({
+      key: '3',
+      label: (
+        <span
+          onClick={() => {
+            userModel.logoutModel({});
+            setInitialState({ ...initialState, currentUser: undefined });
+            history.push('/user/login');
+          }}
+        >
+          Đăng xuất
+        </span>
+      ),
+    });
   }
 
   return (

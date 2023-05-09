@@ -6,9 +6,11 @@ import HeaderWishList from '@/components/HeaderWishList';
 import HeaderCart from '@/components/HeaderCart';
 import { useState } from 'react';
 import MenuItem from './MenuItem';
-import { history } from '@umijs/max';
+import { history, useAccess } from '@umijs/max';
 
 const Header = () => {
+  const access = useAccess();
+
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 950px)',
   });
@@ -35,7 +37,13 @@ const Header = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div
           style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-          onClick={() => history.push('/home')}
+          onClick={() => {
+            if (access?.user) {
+              history.push('/home');
+            } else {
+              history.push('/admin_service');
+            }
+          }}
         >
           <img style={{ width: 32, height: 32 }} src={'/logo.svg'} />{' '}
           <div
@@ -50,38 +58,51 @@ const Header = () => {
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            gap: 16,
-          }}
-        >
-          {/* <MenuItem title={'Trang chủ'} path={'/home'} name={'Trang chủ'} /> */}
-          <MenuItem title={'Sản phẩm'} path={'/products'} name={'Sản phẩm'} />
-          <MenuItem title={'Giới thiệu'} path={'/about'} name={'Giới thiệu'} />
-          <MenuItem title={'Liên hệ'} path={'/contact'} name={'Liên hệ'} />
-        </div>
+        {access?.user && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              gap: 16,
+            }}
+          >
+            {/* <MenuItem title={'Trang chủ'} path={'/home'} name={'Trang chủ'} /> */}
+            <MenuItem title={'Sản phẩm'} path={'/products'} name={'Sản phẩm'} />
+            <MenuItem
+              title={'Giới thiệu'}
+              path={'/about'}
+              name={'Giới thiệu'}
+            />
+            <MenuItem title={'Liên hệ'} path={'/contact'} name={'Liên hệ'} />
+          </div>
+        )}
       </div>
+      {access?.user ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <HeaderSearch />
+          </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <HeaderSearch />
-        </div>
+          <div>
+            <HeaderWishList />
+          </div>
 
-        <div>
-          <HeaderWishList />
-        </div>
+          <div>
+            <HeaderCart />
+          </div>
 
-        <div>
-          <HeaderCart />
+          <div>
+            <RightContent />
+          </div>
         </div>
-
-        <div>
-          <RightContent />
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div>
+            <RightContent />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

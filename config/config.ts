@@ -101,6 +101,16 @@ export default defineConfig({
       component: './Wishlist',
     },
     {
+      path: '/admin_user',
+      name: 'danhsachnguoidung',
+      component: './QuanLyNguoiDung',
+    },
+    {
+      path: '/admin_service',
+      name: 'danhsachservice',
+      component: './QuanLyServices',
+    },
+    {
       component: '404',
     },
   ],
