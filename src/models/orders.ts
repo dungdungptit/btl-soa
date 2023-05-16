@@ -8,12 +8,15 @@ export default () => {
     const [name, setName] = useState<string>(DEFAULT_NAME);
     const [danhSach, setDanhSach] = useState<any[]>([]);
     const [record, setRecord] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false);
 
     const getData = (payload: any) => {
         try {
+            setLoading(true);
             get_orders(payload).then((res) => {
                 setDanhSach(res.data?.data);
             });
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
@@ -26,7 +29,8 @@ export default () => {
         setDanhSach,
         record,
         setRecord,
-
+        loading,
+        setLoading,
         getData,
     };
 };

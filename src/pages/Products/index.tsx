@@ -169,7 +169,7 @@ const HomePage: React.FC = () => {
                         style: 'currency',
                         currency: 'VND',
                       })}{' '}
-                      ₫
+                      .000
                     </span>
                   </div>
                   <div className={styles.productItemInfoAction}>

@@ -15,7 +15,8 @@
     "@ant-design/pro-components": "^2.0.1",
     "@umijs/max": "^4.0.52",
     "antd": "^5.0.0",
-    "react-responsive": "^9.0.2"
+    "react-responsive": "^9.0.2",
+    "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

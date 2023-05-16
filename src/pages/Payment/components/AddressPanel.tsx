@@ -69,7 +69,7 @@ const App: React.FC = ({ title }) => {
             return (
               <Radio value={item} key={index}>
                 <div>
-                  {user?.last_name} {user?.first_name} - {item.receiver_phone}
+                  {item?.receiver_name} - {item.receiver_phone}
                 </div>
                 <div>
                   {item.address}, {item.street}, {item.town}, {item.city}

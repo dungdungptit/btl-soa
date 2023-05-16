@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PictureOutlined, PlusOutlined } from '@ant-design/icons';
 import { Input, Form, Upload, Modal, Button } from 'antd';
-import { useModel } from 'umi';
+import { useModel, history } from 'umi';
 import { post_image } from '@/services/ai_search';
 
 const { Search } = Input;
@@ -34,6 +34,8 @@ const App: React.FC = () => {
       search: res.data,
     });
     setIsModalOpen(false);
+
+    history.push('/products');
   };
 
   const handleCancel = () => {
@@ -59,6 +61,8 @@ const App: React.FC = () => {
       ...productsModel.condition,
       search: value,
     });
+
+    history.push('/products');
   };
 
   return (

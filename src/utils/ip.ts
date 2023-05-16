@@ -1,4 +1,5 @@
 // const ip = 'http://localhost'; // ip dev
-const ip = 'http://192.168.1.16'; // ip dev
+const ip = 'http://localhost'; // ip dev
+const socketIP = "localhost:9999";
 
-export { ip };
+export { ip, socketIP };

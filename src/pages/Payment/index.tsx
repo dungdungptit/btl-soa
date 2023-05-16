@@ -12,6 +12,7 @@ import {
   Form,
   Input,
   message,
+  Spin,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ip } from '@/utils/ip';
@@ -21,6 +22,7 @@ import { post_order } from '@/services/orders/orders';
 const HomePage: React.FC = () => {
   const address = useModel('address');
   const cart = useModel('cart');
+  const orders = useModel('orders');
   const [user, setUser] = useState<any>({});
   // const [cartState, setCartState] = useState<any>({});
   const [valueShipmentMethod, setValueShipmentMethod] = useState<any>('normal');
@@ -148,6 +150,7 @@ const HomePage: React.FC = () => {
     } else {
       cost = 30;
     }
+    orders.setLoading(true);
     if (valuePaymentMethod === 'card') {
       const data = {
         user_id: user.id,
@@ -162,6 +165,7 @@ const HomePage: React.FC = () => {
       };
       console.log(data, 'data');
       await post_order(data).then((res) => {
+        orders.setLoading(false);
         message.success('Đặt hàng thành công');
         history.push('/orders');
       });
@@ -177,6 +181,7 @@ const HomePage: React.FC = () => {
       };
       console.log(data, 'data');
       await post_order(data).then((res) => {
+        orders.setLoading(false);
         message.success('Đặt hàng thành công');
         history.push('/orders');
       });
@@ -184,95 +189,61 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <Breadcrumb>
-        <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-        <Breadcrumb.Item>Thanh toán</Breadcrumb.Item>
-      </Breadcrumb>
+    <Spin spinning={orders.loading}>
+      <div className={styles.container}>
+        <Breadcrumb>
+          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+          <Breadcrumb.Item>Thanh toán</Breadcrumb.Item>
+        </Breadcrumb>
 
-      <Card title="Địa chỉ giao hàng" style={{ width: '100%' }}>
-        <div className={styles.info}>
-          {address.recordSelected?.receiver_name} -
-          {address.recordSelected?.receiver_phone}
-        </div>
-        <div className={styles.address}>
-          {address.recordSelected?.address}, {address.recordSelected?.street},{' '}
-          {address.recordSelected?.town}, {address.recordSelected?.city}
-        </div>
-        <AddressPanel
-          title={address.danhSach.length > 0 ? 'Thay đổi' : 'Thêm địa chỉ'}
+        <Card title="Địa chỉ giao hàng" style={{ width: '100%' }}>
+          <div className={styles.info}>
+            {address.recordSelected?.receiver_name} -
+            {address.recordSelected?.receiver_phone}
+          </div>
+          <div className={styles.address}>
+            {address.recordSelected?.address}, {address.recordSelected?.street},{' '}
+            {address.recordSelected?.town}, {address.recordSelected?.city}
+          </div>
+          <AddressPanel
+            title={address.danhSach.length > 0 ? 'Thay đổi' : 'Thêm địa chỉ'}
+          />
+        </Card>
+
+        <Table
+          columns={columns}
+          dataSource={(cart.record?.selectedRows || []).map(
+            (item: any, index: number) => {
+              return {
+                ...item,
+                key: index + 1,
+              };
+            },
+          )}
         />
-      </Card>
 
-      <Table
-        columns={columns}
-        dataSource={(cart.record?.selectedRows || []).map(
-          (item: any, index: number) => {
-            return {
-              ...item,
-              key: index + 1,
-            };
-          },
-        )}
-      />
+        <Card title="Phương thức giao hàng" style={{ width: '100%' }}>
+          <Radio.Group
+            onChange={onChangeShipmentMethod}
+            value={valueShipmentMethod}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            <Radio value={'normal'} key={'normal'}>
+              {' '}
+              Giao hàng tiêu chuẩn (4-5 ngày, phí 10.000đ)
+            </Radio>
+            <Radio value={'fast'} key={'fast'}>
+              {' '}
+              Giao hàng nhanh (2-3 ngày, phí 20.000đ)
+            </Radio>
+            <Radio value={'express'} key={'express'}>
+              {' '}
+              Giao hàng hỏa tốc (1 ngày, phí 30.000đ)
+            </Radio>
+          </Radio.Group>
+        </Card>
 
-      <Card title="Phương thức giao hàng" style={{ width: '100%' }}>
-        <Radio.Group
-          onChange={onChangeShipmentMethod}
-          value={valueShipmentMethod}
-          style={{ display: 'flex', flexDirection: 'column' }}
-        >
-          <Radio value={'normal'} key={'normal'}>
-            {' '}
-            Giao hàng tiêu chuẩn (4-5 ngày, phí 10.000đ)
-          </Radio>
-          <Radio value={'fast'} key={'fast'}>
-            {' '}
-            Giao hàng nhanh (2-3 ngày, phí 20.000đ)
-          </Radio>
-          <Radio value={'express'} key={'express'}>
-            {' '}
-            Giao hàng hỏa tốc (1 ngày, phí 30.000đ)
-          </Radio>
-        </Radio.Group>
-      </Card>
-
-      <Card title="Lưu ý" style={{ width: '100%' }}>
-        <Form
-          name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={() => {}}
-          onFinishFailed={() => {}}
-          autoComplete="off"
-        >
-          <Form.Item name="note">
-            <Input onChange={onChangeNote} />
-          </Form.Item>
-        </Form>
-      </Card>
-
-      <Card title="Phương thức thanh toán" style={{ width: '100%' }}>
-        <Radio.Group
-          onChange={onChangePaymentMethod}
-          value={valuePaymentMethod}
-          style={{ display: 'flex', flexDirection: 'column' }}
-        >
-          <Radio value={'cash'} key={'cash'}>
-            {' '}
-            Thanh toán khi nhận hàng
-          </Radio>
-          <Radio value={'card'} key={'card'}>
-            {' '}
-            Thanh toán bằng thẻ
-          </Radio>
-        </Radio.Group>
-      </Card>
-
-      {valuePaymentMethod === 'card' && (
-        <Card title="Thông tin thẻ" style={{ width: '100%' }}>
+        <Card title="Lưu ý" style={{ width: '100%' }}>
           <Form
             name="basic"
             labelCol={{ span: 8 }}
@@ -283,62 +254,99 @@ const HomePage: React.FC = () => {
             onFinishFailed={() => {}}
             autoComplete="off"
           >
-            <Form.Item
-              label="Số thẻ"
-              name="card_number"
-              rules={[{ required: true, message: 'Nhập số thẻ!' }]}
-            >
-              <Input
-                onChange={(e) =>
-                  setCardInfo({ ...cardInfo, card_number: e.target.value })
-                }
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Tên chủ thẻ"
-              name="card_name"
-              rules={[{ required: true, message: 'Nhập tên chủ thẻ!' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Ngày hết hạn"
-              name="card_expired"
-              rules={[{ required: true, message: 'Nhập ngày hết hạn!' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Mã CVV"
-              name="cvv"
-              rules={[{ required: true, message: 'Nhập mã CVV!' }]}
-            >
-              <Input
-                onChange={(e) =>
-                  setCardInfo({ ...cardInfo, cvv: e.target.value })
-                }
-              />
+            <Form.Item name="note">
+              <Input onChange={onChangeNote} />
             </Form.Item>
           </Form>
         </Card>
-      )}
 
-      <div className={styles.total}>
-        <div className={styles.total__title}>Tổng tiền</div>
-        <div className={styles.total__price}>
-          {cart.record?.total?.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'VND',
-          })}
-          <Button type="primary" onClick={handleOrder}>
-            Đặt hàng
-          </Button>
+        <Card title="Phương thức thanh toán" style={{ width: '100%' }}>
+          <Radio.Group
+            onChange={onChangePaymentMethod}
+            value={valuePaymentMethod}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            <Radio value={'cash'} key={'cash'}>
+              {' '}
+              Thanh toán khi nhận hàng
+            </Radio>
+            <Radio value={'card'} key={'card'}>
+              {' '}
+              Thanh toán bằng thẻ
+            </Radio>
+          </Radio.Group>
+        </Card>
+
+        {valuePaymentMethod === 'card' && (
+          <Card title="Thông tin thẻ" style={{ width: '100%' }}>
+            <Form
+              name="basic"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              style={{ maxWidth: 600 }}
+              initialValues={{ remember: true }}
+              onFinish={() => {}}
+              onFinishFailed={() => {}}
+              autoComplete="off"
+            >
+              <Form.Item
+                label="Số thẻ"
+                name="card_number"
+                rules={[{ required: true, message: 'Nhập số thẻ!' }]}
+              >
+                <Input
+                  onChange={(e) =>
+                    setCardInfo({ ...cardInfo, card_number: e.target.value })
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Tên chủ thẻ"
+                name="card_name"
+                rules={[{ required: true, message: 'Nhập tên chủ thẻ!' }]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Ngày hết hạn"
+                name="card_expired"
+                rules={[{ required: true, message: 'Nhập ngày hết hạn!' }]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Mã CVV"
+                name="cvv"
+                rules={[{ required: true, message: 'Nhập mã CVV!' }]}
+              >
+                <Input
+                  onChange={(e) =>
+                    setCardInfo({ ...cardInfo, cvv: e.target.value })
+                  }
+                />
+              </Form.Item>
+            </Form>
+          </Card>
+        )}
+
+        <div className={styles.total}>
+          <div className={styles.total__title}>Tổng tiền</div>
+          <div className={styles.total__price}>
+            {cart.record?.total?.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'VND',
+            })}
+            .000
+            <Button type="primary" onClick={handleOrder}>
+              Đặt hàng
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 

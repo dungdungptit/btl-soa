@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const userModel = useModel('user');
   const access = useAccess();
 
-  console.log('access', access);
+  // console.log('access', access);
 
   const items: MenuProps['items'] = [
     {

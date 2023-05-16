@@ -246,6 +246,7 @@ const HomePage: React.FC = () => {
             style: 'currency',
             currency: 'VND',
           })}
+          .000
           <Button
             type="primary"
             onClick={() => {
